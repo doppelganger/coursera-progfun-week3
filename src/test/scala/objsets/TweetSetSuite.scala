@@ -27,6 +27,15 @@ class TweetSetSuite extends FunSuite {
 
   def size(set: TweetSet): Int = asSet(set).size
 
+  def listAsTweetSet(list:List[String]): TweetSet = {
+    var result:TweetSet = new Empty
+    for (text <- list) {
+      val tweet = new Tweet(text, text, 1)
+      result = result.incl(tweet)
+    }
+    result
+  }
+
   test("filter: on empty set") {
     new TestSets {
       assert(size(set1.filter(tw => tw.user == "a")) === 0)
@@ -69,6 +78,20 @@ class TweetSetSuite extends FunSuite {
       assert(!trends.isEmpty)
       assert(trends.head.user == "a" || trends.head.user == "b")
     }
+  }
+
+  test("tweetset as list") {
+    val tweetSet = listAsTweetSet(List("a", "b", "c"))
+    assert(tweetSet.count === 3)
+    assert(size(tweetSet) === 3)
+  }
+
+  test("Union abc 123") {
+    val abc = listAsTweetSet(List("a", "b", "c"))
+    val s123 = listAsTweetSet(List("1", "2", "3"))
+    val union = abc.union(s123)
+    assert(union.count === 6)
+    println(union)
   }
 
   }
